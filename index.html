@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1987 Philippine Constitution Reviewer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #fcd116;
+    --gold-dim: #e8a000;
+    --navy: #0a1628;
+    --navy-mid: #1a2f5a;
+    --navy-light: #1a3a6b;
+    --red: #c0392b;
+    --cream: #e8dcc8;
+    --cream-dim: #d4c8b8;
+    --cream-muted: #b0a090;
+    --green: #4caf50;
+    --danger: #f44336;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy) 100%);
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  #header {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 50%, var(--gold) 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  #header::before {
+    content: '';
+    position: absolute; right: -40px; top: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  #header::after {
+    content: '';
+    position: absolute; left: 20px; bottom: -20px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .header-inner { padding: 24px 32px; position: relative; z-index: 1; }
+  .header-title-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .header-flag { font-size: 48px; }
+  .header-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(18px, 4vw, 28px);
+    font-weight: 900; color: var(--navy);
+    text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+    letter-spacing: -0.5px;
+  }
+  .header-subtitle {
+    margin-top: 2px;
+    font-size: clamp(11px, 2vw, 14px);
+    color: var(--navy-light); font-style: italic; font-weight: 600;
+  }
+  .nav-tabs { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .nav-btn {
+    padding: 8px 18px; border-radius: 999px; border: none;
+    font-weight: 700; font-size: 13px; cursor: pointer;
+    transition: all 0.2s; font-family: 'Source Serif 4', Georgia, serif;
+  }
+  .nav-btn.active { background: var(--navy); color: var(--gold); }
+  .nav-btn.inactive { background: rgba(10,22,40,0.2); color: var(--navy); }
+  .nav-btn.inactive:hover { background: rgba(10,22,40,0.35); }
+
+  /* ── LAYOUT ── */
+  #app { display: flex; flex-direction: column; min-height: calc(100vh - 160px); }
+
+  /* ── BROWSE TAB ── */
+  #browse-view { display: flex; min-height: calc(100vh - 160px); }
+
+  /* Sidebar */
+  #sidebar {
+    width: clamp(180px, 22vw, 260px); min-width: 140px;
+    background: rgba(0,0,0,0.3);
+    border-right: 1px solid rgba(252,209,22,0.15);
+    overflow-y: auto;
+    flex-shrink: 0;
+    max-height: calc(100vh - 160px);
+    position: sticky; top: 0; align-self: flex-start;
+  }
+  #search-input {
+    width: 100%; padding: 8px 10px; border-radius: 8px;
+    border: 1px solid rgba(252,209,22,0.3);
+    background: rgba(255,255,255,0.05); color: var(--cream);
+    font-size: 12px; font-family: inherit; outline: none;
+    margin: 12px 10px 6px; width: calc(100% - 20px);
+    display: block;
+  }
+  #search-input::placeholder { color: var(--cream-muted); }
+  .sidebar-btn {
+    width: 100%; text-align: left; padding: 10px 12px;
+    background: transparent; border: none;
+    border-left: 3px solid transparent;
+    color: var(--cream-muted);
+    cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: flex-start; gap: 8px;
+    font-family: inherit;
+  }
+  .sidebar-btn:hover { background: rgba(252,209,22,0.07); color: var(--cream); }
+  .sidebar-btn.active {
+    background: rgba(252,209,22,0.15);
+    border-left: 3px solid var(--gold);
+    color: var(--gold);
+  }
+  .sidebar-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .sidebar-label { font-weight: 700; font-size: 12px; }
+  .sidebar-sub { font-size: 10px; opacity: 0.7; margin-top: 1px; line-height: 1.3; }
+
+  /* Content */
+  #content-area {
+    flex: 1; overflow-y: auto; padding: 24px clamp(16px, 3vw, 40px);
+    max-height: calc(100vh - 160px);
+  }
+  .article-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .article-icon-wrap {
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+    border: 1px solid rgba(252,209,22,0.2);
+  }
+  .article-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(16px, 3vw, 22px); font-weight: 900; color: var(--gold);
+  }
+  .article-subtitle { color: var(--cream-muted); font-size: 13px; margin-top: 2px; }
+  .quiz-this-btn {
+    padding: 10px 18px; border-radius: 999px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    border: none; color: var(--navy); font-weight: 700;
+    font-size: 13px; cursor: pointer; font-family: inherit;
+    transition: opacity 0.2s; white-space: nowrap;
+  }
+  .quiz-this-btn:hover { opacity: 0.85; }
+
+  /* Sections */
+  .section-card {
+    margin-bottom: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(252,209,22,0.1);
+    border-radius: 12px; overflow: hidden;
+  }
+  .section-heading {
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(252,209,22,0.08);
+  }
+  .section-heading h3 {
+    font-size: 13px; font-weight: 700; color: var(--gold);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .section-body { padding: 14px 18px; }
+  .section-body p { font-size: 14px; line-height: 1.7; color: var(--cream-dim); }
+  .section-body ul { padding-left: 18px; }
+  .section-body li {
+    font-size: 13px; line-height: 1.6; color: var(--cream-dim);
+    margin-bottom: 6px; padding-left: 4px;
+  }
+  .bullet-key { color: var(--gold); font-weight: 700; }
+
+  /* Flashcard preview */
+  .fc-preview {
+    margin-top: 24px; padding: 18px;
+    background: rgba(252,209,22,0.07);
+    border: 1px solid rgba(252,209,22,0.2); border-radius: 12px;
+  }
+  .fc-preview h3 {
+    margin-bottom: 12px; font-size: 13px; color: var(--gold);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .fc-item {
+    margin-bottom: 10px; padding: 12px;
+    background: rgba(0,0,0,0.2); border-radius: 8px;
+  }
+  .fc-item p.q { margin-bottom: 6px; font-size: 13px; color: var(--gold); font-weight: 600; }
+  .fc-item p.a { font-size: 12px; color: #a0b090; }
+  .see-all-btn {
+    margin-top: 8px; padding: 8px 16px; border-radius: 999px;
+    background: rgba(252,209,22,0.15); border: 1px solid rgba(252,209,22,0.4);
+    color: var(--gold); font-weight: 600; font-size: 12px;
+    cursor: pointer; font-family: inherit; transition: background 0.2s;
+  }
+  .see-all-btn:hover { background: rgba(252,209,22,0.25); }
+
+  /* ── QUIZ TAB ── */
+  #quiz-view { display: none; padding: clamp(16px, 4vw, 40px); max-width: 700px; margin: 0 auto; }
+  .quiz-label { margin-bottom: 10px; font-size: 12px; color: var(--cream-muted); text-transform: uppercase; letter-spacing: 0.5px; font-family: 'JetBrains Mono', monospace; }
+  .scope-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .scope-btn {
+    padding: 7px 12px; border-radius: 999px;
+    border: 1px solid rgba(252,209,22,0.2);
+    background: rgba(255,255,255,0.07); color: var(--cream-muted);
+    font-weight: 600; font-size: 11px; cursor: pointer; font-family: inherit;
+    transition: all 0.2s;
+  }
+  .scope-btn:hover { background: rgba(252,209,22,0.1); color: var(--cream); }
+  .scope-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    color: var(--navy); border-color: transparent;
+  }
+  .scope-btn.all-btn { border: 1px solid rgba(252,209,22,0.3); }
+
+  /* Progress bar */
+  .progress-row { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
+  .progress-track {
+    flex: 1; height: 6px; background: rgba(255,255,255,0.1);
+    border-radius: 999px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 999px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-dim));
+    transition: width 0.3s;
+  }
+  .prog-num { font-size: 12px; color: var(--cream-muted); white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
+  .prog-correct { font-size: 12px; color: var(--green); font-family: 'JetBrains Mono', monospace; }
+  .prog-wrong { font-size: 12px; color: var(--danger); font-family: 'JetBrains Mono', monospace; }
+
+  /* Card */
+  .card-source-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 999px; margin-bottom: 16px;
+  }
+  .card-source-label { font-size: 11px; color: var(--gold); font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+  .flashcard {
+    min-height: 220px; padding: 32px; border-radius: 20px;
+    border: 1px solid rgba(252,209,22,0.15);
+    cursor: pointer; transition: all 0.3s;
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #1a2040, #0a1628);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .flashcard.flipped {
+    background: linear-gradient(135deg, #1a3a6b, #0a2040);
+    border-color: rgba(252,209,22,0.4);
+    box-shadow: 0 8px 40px rgba(252,209,22,0.1);
+  }
+  .card-hint {
+    position: absolute; top: 16px; right: 16px;
+    font-size: 11px; color: rgba(255,255,255,0.3);
+    text-transform: uppercase; letter-spacing: 1px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .card-type-label {
+    font-size: 12px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .card-type-label.q-label { color: var(--gold); }
+  .card-type-label.a-label { color: var(--green); }
+  .card-q-text { font-size: clamp(15px, 2.5vw, 19px); line-height: 1.6; color: #fff; font-weight: 600; }
+  .card-a-text { font-size: clamp(14px, 2vw, 17px); line-height: 1.7; color: #d4f0d4; }
+
+  /* Card actions */
+  .reveal-row { text-align: center; margin-top: 16px; }
+  .reveal-btn {
+    padding: 12px 32px; border-radius: 999px;
+    background: rgba(252,209,22,0.15);
+    border: 1px solid rgba(252,209,22,0.4);
+    color: var(--gold); font-weight: 700; font-size: 14px;
+    cursor: pointer; font-family: inherit; transition: background 0.2s;
+  }
+  .reveal-btn:hover { background: rgba(252,209,22,0.25); }
+  .answer-btns { display: flex; gap: 12px; margin-top: 16px; justify-content: center; }
+  .miss-btn {
+    flex: 1; max-width: 160px; padding: 14px; border-radius: 12px;
+    border: 2px solid var(--danger); background: rgba(244,67,54,0.1);
+    color: var(--danger); font-weight: 700; font-size: 14px;
+    cursor: pointer; font-family: inherit; transition: background 0.2s;
+  }
+  .miss-btn:hover { background: rgba(244,67,54,0.2); }
+  .got-btn {
+    flex: 1; max-width: 160px; padding: 14px; border-radius: 12px;
+    border: 2px solid var(--green); background: rgba(76,175,80,0.1);
+    color: var(--green); font-weight: 700; font-size: 14px;
+    cursor: pointer; font-family: inherit; transition: background 0.2s;
+  }
+  .got-btn:hover { background: rgba(76,175,80,0.2); }
+
+  /* Quiz done */
+  #quiz-done {
+    text-align: center; padding: 48px 24px;
+    background: rgba(255,255,255,0.05); border-radius: 20px;
+    border: 1px solid rgba(252,209,22,0.2);
+  }
+  #quiz-done .trophy { font-size: 64px; margin-bottom: 16px; }
+  #quiz-done h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    color: var(--gold); font-size: 24px; margin-bottom: 8px;
+  }
+  #quiz-done p { color: var(--cream-dim); margin-bottom: 24px; }
+  #quiz-done .pct { font-size: 32px; font-weight: 900; color: var(--gold); margin-bottom: 24px; }
+  #try-again-btn {
+    padding: 12px 28px; border-radius: 999px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    border: none; color: var(--navy); font-weight: 700;
+    font-size: 14px; cursor: pointer; font-family: inherit;
+    transition: opacity 0.2s;
+  }
+  #try-again-btn:hover { opacity: 0.85; }
+
+  /* Footer */
+  footer {
+    text-align: center; padding: 20px;
+    border-top: 1px solid rgba(252,209,22,0.1);
+    color: rgba(255,255,255,0.3); font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(252,209,22,0.2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(252,209,22,0.4); }
+
+  /* Hidden */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="header-inner">
+    <div class="header-title-row">
+      <div class="header-flag">🇵🇭</div>
+      <div>
+        <h1 class="header-title">1987 Philippine Constitution</h1>
+        <p class="header-subtitle">Complete Reviewer — All 18 Articles + Preamble • Flashcard Mode Included</p>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-btn active" id="tab-browse" onclick="switchTab('browse')">📚 Browse Articles</button>
+      <button class="nav-btn inactive" id="tab-quiz" onclick="switchTab('quiz')">🧠 Flashcard Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- BROWSE -->
+<div id="browse-view">
+  <div id="sidebar">
+    <input type="text" id="search-input" placeholder="🔍 Search..." oninput="filterSidebar(this.value)" />
+    <div id="sidebar-list"></div>
+  </div>
+  <div id="content-area">
+    <div id="article-content"></div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-view">
+  <p class="quiz-label">Quiz Scope:</p>
+  <div class="scope-btns" id="scope-btns"></div>
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <span class="prog-num" id="prog-num">0/0</span>
+    <span class="prog-correct" id="prog-correct">✓ 0</span>
+    <span class="prog-wrong" id="prog-wrong">✗ 0</span>
+  </div>
+  <div id="quiz-done" class="hidden">
+    <div class="trophy" id="trophy-icon">🏆</div>
+    <h2>Quiz Complete!</h2>
+    <p id="done-msg"></p>
+    <div class="pct" id="done-pct"></div>
+    <button id="try-again-btn" onclick="tryAgain()">🔄 Try Again</button>
+  </div>
+  <div id="quiz-card-area"></div>
+</div>
+
+<footer>Based on the 1987 Constitution of the Republic of the Philippines (Official Gazette)</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const PREAMBLE = `We, the sovereign Filipino people, imploring the aid of Almighty God, in order to build a just and humane society and establish a Government that shall embody our ideals and aspirations, promote the common good, conserve and develop our patrimony, and secure to ourselves and our posterity the blessings of independence and democracy under the rule of law and a regime of truth, justice, freedom, love, equality, and peace, do ordain and promulgate this Constitution.`;
+
+const ARTICLES = [
+  {
+    id: "preamble", title: "Preamble", subtitle: "Foundation of the Constitution",
+    color: "#1a3a6b", icon: "📜",
+    sections: [
+      { heading: "Full Text", content: PREAMBLE },
+      { heading: "Key Phrases to Remember", bullets: ['"Sovereign Filipino people" — Source of state authority','"Almighty God" — Acknowledges divine providence (not a theocracy)','"Just and humane society" — Social justice goal','"Common good" — Purpose of government','"Patrimony" — Natural and cultural heritage','"Rule of law" — No one is above the law','"Truth, justice, freedom, love, equality, and peace" — 6 ideals'] },
+      { heading: "Mnemonic for the 6 Ideals", content: "T-J-F-L-E-P → 'The Judge Finds Love Equally Peaceful'" }
+    ],
+    flashcards: [
+      { q: "Who is the source of government authority under the 1987 Constitution?", a: "The sovereign Filipino people." },
+      { q: "How many ideals are enumerated in the Preamble?", a: "Six: truth, justice, freedom, love, equality, and peace." },
+      { q: "What does the Preamble say about God?", a: "It invokes 'the aid of Almighty God' — acknowledging divine providence but not establishing a state religion." },
+      { q: "What is 'patrimony' as used in the Preamble?", a: "The natural and cultural heritage of the Filipino people to be conserved and developed." }
+    ]
+  },
+  {
+    id: "art1", title: "Article I", subtitle: "National Territory",
+    color: "#c0392b", icon: "🗺️",
+    sections: [
+      { heading: "Coverage of National Territory", bullets: ["Philippine archipelago — all islands and waters within it","All other territories over which the Philippines has sovereignty or jurisdiction","Terrestrial, fluvial, and aerial domains","Territorial sea, seabed, subsoil, insular shelves, other submarine areas","Waters around, between, and connecting islands (archipelagic waters)","Exclusive Economic Zone (EEZ) and continental shelf"] },
+      { heading: "Key Doctrine: Archipelagic Doctrine", content: "The waters around, between, and connecting the islands of the archipelago form part of the internal waters of the Philippines regardless of breadth or dimension. This treats the Philippines as one unit." },
+      { heading: "Kalayaan Group & Sabah", bullets: ["Kalayaan Islands (Spratlys) — claimed but disputed with China, Vietnam, and others","Sabah — historical claim vs. Malaysia; not explicitly named in the Constitution but covered by 'all other territories'"] },
+      { heading: "Baselines Law", content: "RA 9522 (2009) defines the archipelagic baselines. The Kalayaan Island Group and Scarborough Shoal are treated as 'Regime of Islands' under UNCLOS." }
+    ],
+    flashcards: [
+      { q: "What does the national territory of the Philippines include?", a: "The Philippine archipelago, all islands and waters, terrestrial/fluvial/aerial domains, territorial sea, EEZ, continental shelf, and all other territories over which the Philippines has sovereignty." },
+      { q: "What is the Archipelagic Doctrine?", a: "The waters connecting the islands of the Philippines form part of internal waters regardless of their breadth or dimension, treating the nation as one integral unit." },
+      { q: "What law defines Philippine archipelagic baselines?", a: "Republic Act 9522 (2009)." },
+      { q: "How does the 1987 Constitution treat the Kalayaan Islands?", a: "They are part of Philippine territory as 'other territories over which the Philippines has sovereignty or jurisdiction.'" }
+    ]
+  },
+  {
+    id: "art2", title: "Article II", subtitle: "Declaration of Principles and State Policies",
+    color: "#1a3a6b", icon: "⚖️",
+    sections: [
+      { heading: "Fundamental Principles (Sec. 1–6)", bullets: ["Sec. 1 — Democratic and republican state; sovereignty resides in the people","Sec. 2 — Renunciation of war as instrument of national policy; generally accepted principles of international law as part of the law of the land","Sec. 3 — Civilian authority is supreme over the military","Sec. 4 — Duty of government to serve and protect the people; right of people to defend the State","Sec. 5 — Maintenance of peace and order; protection of life, liberty, and property","Sec. 6 — Separation of Church and State"] },
+      { heading: "State Policies (Sec. 7–28)", bullets: ["Sec. 7 — Independent foreign policy; nuclear-free Philippines","Sec. 8 — Freedom from nuclear weapons","Sec. 9 — Just and dynamic social order","Sec. 10 — Social justice in all phases of national development","Sec. 11 — Dignity of every human person; guarantee of full respect for human rights","Sec. 12 — Sanctity of family life; protect and strengthen the family","Sec. 13 — Youth as priority in national development","Sec. 14 — Role of women; fundamental equality before the law","Sec. 15 — Right to health (balanced and healthful ecology in Sec. 16)","Sec. 16 — Right to a balanced and healthful ecology","Sec. 17 — Priority of education, science, technology, arts, culture, sports","Sec. 18 — Labor as primary social economic force; protect rights of workers","Sec. 19 — Self-reliant and independent national economy","Sec. 20 — Private sector as engine of development","Sec. 21 — Comprehensive rural development and agrarian reform","Sec. 22 — Recognize and promote rights of indigenous cultural communities","Sec. 23 — Encourage non-governmental, community-based, and sectoral organizations","Sec. 24 — Communication and information as vital in nation building","Sec. 25 — Autonomy of local governments","Sec. 26 — Equal access to opportunities for public service; prohibition against political dynasties","Sec. 27 — Honest and efficient government; graft and corruption","Sec. 28 — Transparency; full public disclosure"] },
+      { heading: "Note: Self-Executing vs. Non-Self-Executing", content: "Most provisions of Article II are NON-SELF-EXECUTING (directory/aspirational) and require legislation. They cannot be enforced in court directly. EXCEPTION: Sec. 16 (right to a balanced ecology) was held self-executing in Oposa v. Factoran." }
+    ],
+    flashcards: [
+      { q: "Where does sovereignty reside under the 1987 Constitution?", a: "In the people and all government authority emanates from them (Sec. 1, Art. II)." },
+      { q: "What is the principle of civilian supremacy?", a: "Civilian authority is always supreme over the military (Sec. 3, Art. II)." },
+      { q: "Which provision of Article II was declared self-executing by the Supreme Court?", a: "Section 16 (right to a balanced and healthful ecology), in Oposa v. Factoran (1993)." },
+      { q: "What does the Constitution say about nuclear weapons?", a: "Sec. 8 states the Philippines adopts and pursues a policy of freedom from nuclear weapons in its territory." },
+      { q: "What is the doctrine of incorporation?", a: "Under Sec. 2, the Philippines adopts generally accepted principles of international law as part of the law of the land." },
+      { q: "What does Sec. 26 prohibit?", a: "Political dynasties — equal access to public service opportunities and a law against political dynasties must be enacted." }
+    ]
+  },
+  {
+    id: "art3", title: "Article III", subtitle: "Bill of Rights",
+    color: "#c0392b", icon: "🛡️",
+    sections: [
+      { heading: "Overview", content: "The Bill of Rights (22 sections) protects individuals against abuse of power by the STATE (not private parties). These are SELF-EXECUTING provisions." },
+      { heading: "Due Process & Equal Protection (Sec. 1)", bullets: ["No person shall be deprived of life, liberty, or property without due process of law","SUBSTANTIVE due process — law itself must be fair, reasonable, just","PROCEDURAL due process — manner of enforcement must be fair","Equal protection of the laws — similarly situated persons treated alike"] },
+      { heading: "Searches & Seizures (Sec. 2–3)", bullets: ["Right against unreasonable searches and seizures","Warrant must be supported by probable cause, personally determined by a judge","Warrant must particularly describe the place and things to be seized","Exclusionary rule — evidence illegally obtained is inadmissible ('fruit of the poisonous tree')","Privacy of communication and correspondence guaranteed"] },
+      { heading: "Liberty of Abode & Travel (Sec. 6)", content: "Right to travel and to change abode may be limited only by court order or by law for national security, public safety, or public health." },
+      { heading: "Freedom of Expression (Sec. 4)", bullets: ["No law shall be passed abridging freedom of speech, of expression, or of the press","Right of the people peaceably to assemble and petition the government","PRIOR RESTRAINT is presumed unconstitutional","Not absolute — obscenity, libel, false advertising, national security may be regulated"] },
+      { heading: "Religion (Sec. 5)", bullets: ["Free exercise and enjoyment of religious profession and worship","Non-establishment clause — no law respecting an establishment of religion","Religious tests for exercise of civil or political rights are prohibited"] },
+      { heading: "Rights of the Accused (Sec. 12–22)", bullets: ["Sec. 12 — Miranda Rights: right to remain silent, right to counsel (preferably of own choice), right to be informed of these rights; no torture, force, intimidation","Sec. 13 — Right to bail; except when evidence of guilt is strong for offenses punishable by reclusion perpetua","Sec. 14 — Presumption of innocence; right to be heard by himself and counsel; right to speedy trial","Sec. 15 — Privilege of writ of habeas corpus (suspended only in cases of invasion, rebellion, when public safety requires)","Sec. 16 — Right to speedy disposition of cases before ALL judicial, quasi-judicial, and administrative bodies","Sec. 17 — Right against self-incrimination","Sec. 18 — No involuntary servitude; no imprisonment for debt or non-payment of poll tax","Sec. 19 — No excessive fines; no cruel, degrading, or inhuman punishment","Sec. 20 — No imprisonment for non-payment of debt or poll tax","Sec. 21 — Double jeopardy","Sec. 22 — No ex post facto law or bill of attainder"] },
+      { heading: "Eminent Domain & Just Compensation (Sec. 9)", content: "Private property shall not be taken for public use without just compensation. Requisites: (1) public use, (2) just compensation, (3) due process." }
+    ],
+    flashcards: [
+      { q: "What are the two aspects of due process?", a: "Substantive due process (the law itself must be fair and reasonable) and procedural due process (the manner of enforcement must follow fair procedures)." },
+      { q: "What is the exclusionary rule?", a: "Any evidence obtained in violation of the right against unreasonable searches and seizures shall be inadmissible — the 'fruit of the poisonous tree' doctrine." },
+      { q: "What are the Miranda Rights under Sec. 12, Art. III?", a: "The right to remain silent, the right to have competent and independent counsel (preferably of own choice), and the right to be informed of these rights. No torture, force, or intimidation is allowed." },
+      { q: "When may the privilege of the writ of habeas corpus be suspended?", a: "Only in cases of invasion or rebellion, when public safety requires it, and only by the President, subject to review by the Congress." },
+      { q: "What is double jeopardy?", a: "No person shall be twice put in jeopardy of punishment for the same offense (Sec. 21, Art. III)." },
+      { q: "What is an ex post facto law?", a: "A law that (1) makes an act criminal that was legal when done, (2) aggravates a crime, (3) inflicts greater punishment than the law at the time, (4) changes the rules of evidence to convict the offender." },
+      { q: "What are the requisites for valid exercise of eminent domain?", a: "(1) Public use, (2) just compensation, and (3) due process of law." },
+      { q: "When is the right to bail NOT available?", a: "When the person is charged with an offense punishable by reclusion perpetua and the evidence of guilt is strong." }
+    ]
+  },
+  {
+    id: "art4", title: "Article IV", subtitle: "Citizenship",
+    color: "#1a3a6b", icon: "🇵🇭",
+    sections: [
+      { heading: "Who are Citizens of the Philippines? (Sec. 1)", bullets: ["(1) Those who are citizens at the time of the adoption of the Constitution","(2) Those whose fathers OR mothers are citizens of the Philippines (jus sanguinis)","(3) Those born before January 17, 1973 of Filipino mothers who elected Philippine citizenship upon reaching the age of majority","(4) Those who are naturalized in accordance with law"] },
+      { heading: "Natural-Born Citizens (Sec. 2)", content: "Citizens from birth without needing to perform any act to acquire or perfect their citizenship. Includes those who elect Philippine citizenship under par. (3) of Sec. 1 — they shall be deemed natural-born." },
+      { heading: "Loss & Reacquisition (Sec. 3)", content: "Philippine citizenship may be lost or reacquired in the manner provided by law (e.g., RA 9225 — Citizenship Retention and Reacquisition Act of 2003)." },
+      { heading: "Dual Allegiance (Sec. 5)", content: "Dual allegiance of citizens is inimical to the national interest and shall be dealt with by law." },
+      { heading: "Jus Sanguinis vs. Jus Soli", bullets: ["Philippines follows JUS SANGUINIS — citizenship by blood (father or mother)","NOT jus soli (citizenship by place of birth)"] }
+    ],
+    flashcards: [
+      { q: "What principle of citizenship does the Philippines follow?", a: "Jus sanguinis — citizenship by blood. A person is a citizen if born of a Filipino father or mother." },
+      { q: "Who are natural-born citizens?", a: "Those who are citizens from birth without needing to perform any act to acquire or perfect citizenship, including those who elected Philippine citizenship." },
+      { q: "What does the Constitution say about dual allegiance?", a: "Dual allegiance of citizens is inimical to the national interest and shall be dealt with by law (Sec. 5, Art. IV)." },
+      { q: "What law governs reacquisition of Philippine citizenship?", a: "Republic Act 9225, the Citizenship Retention and Reacquisition Act of 2003." }
+    ]
+  },
+  {
+    id: "art5", title: "Article V", subtitle: "Suffrage",
+    color: "#c0392b", icon: "🗳️",
+    sections: [
+      { heading: "Qualifications to Vote (Sec. 1)", bullets: ["Filipino citizen","At least 18 years old","Resident of the Philippines for at least one year","Resident in the place where they propose to vote for at least six months","Not otherwise disqualified by law"] },
+      { heading: "No Literacy/Property/Other Requirement (Sec. 1)", content: "No literacy, property, or other substantive requirement shall be imposed on the exercise of suffrage. Voting is a right, not a privilege." },
+      { heading: "Absentee Voting (Sec. 2)", content: "Congress shall provide a system for securing the secrecy and sanctity of the ballot as well as a system for absentee voting by qualified Filipinos abroad." }
+    ],
+    flashcards: [
+      { q: "What are the qualifications to vote in the Philippines?", a: "Filipino citizen, at least 18 years old, resident of the Philippines for 1 year, resident in the place of voting for 6 months, and not disqualified by law." },
+      { q: "Can literacy or property be required to vote?", a: "No. The Constitution expressly prohibits literacy, property, or other substantive requirements for suffrage." },
+      { q: "What does the Constitution say about Filipinos abroad voting?", a: "Congress shall provide a system for absentee voting by qualified Filipinos abroad (Sec. 2, Art. V)." }
+    ]
+  },
+  {
+    id: "art6", title: "Article VI", subtitle: "Legislative Department",
+    color: "#1a3a6b", icon: "🏛️",
+    sections: [
+      { heading: "Structure: Bicameral Congress", bullets: ["Senate — 24 senators, elected at large (nationwide)","House of Representatives — not more than 250 members (or as fixed by law); district representatives + party-list representatives (20% of total seats)"] },
+      { heading: "Senate Qualifications (Sec. 3)", bullets: ["Natural-born citizen","At least 35 years old on the day of election","Able to read and write","Registered voter","Resident of the Philippines for not less than 2 years before election"] },
+      { heading: "Senate Term", bullets: ["6-year term","Not more than two consecutive terms","Elections every 3 years; half of the Senate elected each time","Voluntary renunciation does NOT interrupt continuity of service"] },
+      { heading: "House of Representatives Qualifications (Sec. 6)", bullets: ["Natural-born citizen","At least 25 years old on day of election","Able to read and write","Registered voter in district (for district rep) or party-list system","Resident of district for not less than 1 year before election"] },
+      { heading: "House of Representatives Term", bullets: ["3-year term","Not more than three consecutive terms"] },
+      { heading: "Party-List System (Sec. 5)", bullets: ["Marginalized and underrepresented sectors","20% of total House seats","Party-list reps elected nationally","Landmark case: Veterans Federation Party v. COMELEC, Banat v. COMELEC — formula for seat allocation"] },
+      { heading: "Legislative Process — How a Bill Becomes a Law", bullets: ["1. Filing/Introduction of bill in either chamber","2. First Reading — title and number only; referral to committee","3. Committee deliberations and report","4. Second Reading — full debate and amendments; voting","5. Third Reading — final vote on engrossed bill; no amendments allowed","6. Transmittal to the other chamber (same process)","7. Bicameral Conference Committee if versions differ","8. President: sign (enacted), veto (returned), or lapse into law after 30 days","9. Override a veto: 2/3 vote of all members of each chamber"] },
+      { heading: "Powers of Congress", bullets: ["Power of appropriation (power of the purse)","Power of taxation","Power to declare war","Power of legislative investigation (Sec. 21)","Power to concur in treaties (2/3 of all Senate members)","Power to confirm appointments (Commission on Appointments)","Contempt power","Electoral tribunal power (SET and HRET)"] },
+      { heading: "Commission on Appointments (CA) (Sec. 18)", bullets: ["12 senators + 12 House members (proportional by party)","Senate President and House Speaker as ex officio members","Confirms: heads of executive departments, ambassadors, officers of AFP from rank of colonel/naval captain, and other officers specified by the Constitution","Meets only while Congress is in session"] }
+    ],
+    flashcards: [
+      { q: "How many senators are there in the Philippine Senate?", a: "24 senators, elected at large (nationwide), each serving a 6-year term." },
+      { q: "What is the term limit for Senators?", a: "Not more than two consecutive terms (6 years each)." },
+      { q: "What is the term limit for House Representatives?", a: "Not more than three consecutive terms (3 years each)." },
+      { q: "What are the qualifications to be a Senator?", a: "Natural-born citizen, at least 35 years old, able to read and write, registered voter, and Philippine resident for at least 2 years before election." },
+      { q: "What percentage of House seats are reserved for party-list representatives?", a: "20% of the total membership of the House of Representatives." },
+      { q: "How many votes are needed to override a presidential veto?", a: "Two-thirds vote of all members of each chamber (Senate and House)." },
+      { q: "What are the Electoral Tribunals of Congress?", a: "The Senate Electoral Tribunal (SET) and the House of Representatives Electoral Tribunal (HRET) — they are the sole judges of election contests of their respective members." },
+      { q: "How many Senate votes are needed to concur in a treaty?", a: "At least 2/3 of all Senate members (i.e., 16 out of 24)." }
+    ]
+  },
+  {
+    id: "art7", title: "Article VII", subtitle: "Executive Department",
+    color: "#c0392b", icon: "🦅",
+    sections: [
+      { heading: "President", bullets: ["Executive power vested in the President","Qualifications: natural-born citizen, registered voter, able to read and write, at least 40 years old, resident of the Philippines for at least 10 years before election","Term: 6 years; NOT eligible for any reelection","Elected directly by qualified voters"] },
+      { heading: "Vice President", bullets: ["Same qualifications as President","6-year term; not more than two successive terms","Can be appointed as Cabinet member without confirmation by CA","Succeeds the President if the latter is removed, dies, or is permanently incapacitated"] },
+      { heading: "Presidential Succession", bullets: ["1st: Vice President","2nd: Senate President (acting capacity)","3rd: House Speaker (acting capacity)"] },
+      { heading: "Powers of the President", bullets: ["Commander-in-Chief of the Armed Forces","Pardoning power (clemency): pardon, amnesty, commutation, reprieve, remission of fines","Diplomatic power: ratify treaties (with 2/3 Senate concurrence)","Appointment power (some require CA confirmation)","Control over executive departments","Supervision over local government units","Emergency powers (with congressional authorization)","Power to contract and guarantee foreign loans (with prior concurrence of Monetary Board)","Power to declare martial law and suspend habeas corpus","Power to call armed forces to prevent or suppress lawless violence","Veto power (item veto for appropriation/revenue/tariff bills)"] },
+      { heading: "Martial Law & Suspension of Habeas Corpus (Sec. 18)", bullets: ["Grounds: invasion or rebellion when public safety requires","Duration: not more than 60 days without extension by Congress","Congress may revoke (majority of all members) or extend","Supreme Court may review the sufficiency of factual basis","No diminution of civilian courts or legislative assemblies","No automatic suspension of the privilege of the writ of habeas corpus","Persons arrested must be charged within 3 days or released"] },
+      { heading: "Pardoning Power (Sec. 19)", bullets: ["Cannot pardon in cases of impeachment","Amnesty requires concurrence of majority of all members of Congress","Pardon does NOT restore civil rights automatically","Conviction by final judgment must be entered before pardon (except for constitutional officers/impeachment cases)"] }
+    ],
+    flashcards: [
+      { q: "What are the qualifications to be President of the Philippines?", a: "Natural-born citizen, registered voter, able to read and write, at least 40 years old, and resident of the Philippines for at least 10 years before election." },
+      { q: "How long is the President's term? Can they be reelected?", a: "6 years. The President is NOT eligible for any reelection." },
+      { q: "What are the grounds for the President to declare Martial Law?", a: "Invasion or rebellion, when public safety requires it." },
+      { q: "How long can Martial Law last initially?", a: "Not more than 60 days. Congress may extend upon the President's initiative." },
+      { q: "Can the President pardon someone convicted through impeachment?", a: "No. The pardoning power does not extend to cases of impeachment." },
+      { q: "When does the Vice President succeed the President?", a: "When the President dies, is permanently incapacitated, is removed from office, or resigns." },
+      { q: "What congressional action is needed for Amnesty?", a: "Amnesty requires concurrence of a majority of all members of Congress." }
+    ]
+  },
+  {
+    id: "art8", title: "Article VIII", subtitle: "Judicial Department",
+    color: "#1a3a6b", icon: "⚖️",
+    sections: [
+      { heading: "Judicial Power (Sec. 1)", bullets: ["Vested in the Supreme Court and lower courts established by law","Includes the duty to settle ACTUAL CONTROVERSIES involving legal rights","Power to determine whether there has been grave abuse of discretion amounting to lack or excess of jurisdiction — EXPANDED judicial power"] },
+      { heading: "Supreme Court Composition (Sec. 4)", bullets: ["Chief Justice + 14 Associate Justices = 15 members total","Sits en banc OR in divisions of 3, 5, or 7","En banc required for: constitutionality of laws/treaties, application or interpretation of the Constitution, all cases involving the constitutionality, application, or operation of presidential decrees, proclamations, orders, instructions, ordinances, and other regulations"] },
+      { heading: "Qualifications of SC Members (Sec. 7)", bullets: ["Natural-born citizen of the Philippines","At least 40 years of age","15 years or more of experience as a judge or in the practice of law","Person of proven competence, integrity, probity, and independence"] },
+      { heading: "Judicial and Bar Council (JBC) (Sec. 8)", bullets: ["Body under the Supreme Court","Principal function: recommend appointees to the judiciary","Composition: Chief Justice (ex officio chair), Secretary of Justice, representative of Congress (ex officio), representative of IBP, professor of law, retired SC justice, representative of private sector","President appoints from JBC nominations"] },
+      { heading: "Period to Decide (Sec. 15)", bullets: ["Supreme Court: 24 months from filing","All lower collegiate courts: 12 months","All other lower courts: 3 months"] },
+      { heading: "Hierarchy of Courts", bullets: ["Supreme Court (highest)","Court of Appeals / Sandiganbayan / Court of Tax Appeals","Regional Trial Courts","Metropolitan/Municipal Trial Courts"] }
+    ],
+    flashcards: [
+      { q: "How many members does the Supreme Court have?", a: "15 — the Chief Justice and 14 Associate Justices." },
+      { q: "What is the 'expanded' judicial power under Sec. 1, Art. VIII?", a: "The duty to determine whether any branch or instrumentality of the government acted with grave abuse of discretion amounting to lack or excess of jurisdiction." },
+      { q: "What is the Judicial and Bar Council?", a: "A body under the Supreme Court that recommends nominees to judicial positions. It is composed of the Chief Justice, Secretary of Justice, representative of Congress, IBP, law professor, retired SC justice, and a private sector representative." },
+      { q: "What is the period for the Supreme Court to decide cases?", a: "24 months from the filing of the last pleading or brief." },
+      { q: "What are the qualifications of a Supreme Court Justice?", a: "Natural-born citizen, at least 40 years old, at least 15 years of legal/judicial experience, with proven competence, integrity, probity, and independence." }
+    ]
+  },
+  {
+    id: "art9", title: "Article IX", subtitle: "Constitutional Commissions",
+    color: "#c0392b", icon: "🏅",
+    sections: [
+      { heading: "Three Constitutional Commissions", bullets: ["A — Civil Service Commission (CSC)","B — Commission on Elections (COMELEC)","C — Commission on Audit (COA)"] },
+      { heading: "Common Provisions (Art. IX-A)", bullets: ["Independent constitutional bodies","Each chaired by a Chairman + 2 Commissioners","Appointed by President with CoA confirmation","7-year term; no reappointment; rotational appointments","Enjoy fiscal autonomy","Decisions appealable to the Supreme Court on certiorari","Salary cannot be decreased during term"] },
+      { heading: "Civil Service Commission (Art. IX-B)", bullets: ["Central personnel agency of the government","Merit and fitness — civil service positions filled by competitive examination","Covers all government branches, subdivisions, instrumentalities, and agencies","No partisan political activity for civil servants","No officer or employee in the civil service shall engage in strike","Dual compensation rule — no double compensation unless specifically authorized by law"] },
+      { heading: "Commission on Elections (Art. IX-C)", bullets: ["Enforce and administer election laws","Decide all questions affecting elections","Register political parties, organizations, coalitions","COMELEC decisions may be brought to SC only on certiorari"] },
+      { heading: "Commission on Audit (Art. IX-D)", bullets: ["Exclusive authority to define scope of audit, establish auditing techniques","Examine, audit, and settle all accounts of government","Promulgate accounting and auditing rules and regulations","No government money may be spent without COA's certificate of availability of funds"] }
+    ],
+    flashcards: [
+      { q: "What are the three Constitutional Commissions?", a: "Civil Service Commission (CSC), Commission on Elections (COMELEC), and Commission on Audit (COA)." },
+      { q: "What is the term of commissioners of Constitutional Commissions?", a: "7 years, without reappointment." },
+      { q: "What is the primary function of the CSC?", a: "It is the central personnel agency of the government, enforcing merit and fitness in civil service appointments." },
+      { q: "Can government employees go on strike?", a: "No. Under Art. IX-B, no officer or employee in the civil service shall engage in strikes." },
+      { q: "What is the role of COA?", a: "To examine, audit, and settle all accounts and expenditures of government funds and properties." }
+    ]
+  },
+  {
+    id: "art10", title: "Article X", subtitle: "Local Government",
+    color: "#1a3a6b", icon: "🏙️",
+    sections: [
+      { heading: "Territorial and Political Subdivisions (Sec. 1)", bullets: ["Provinces, cities, municipalities, and barangays","Autonomous regions in Muslim Mindanao and the Cordilleras"] },
+      { heading: "Local Autonomy (Sec. 2)", content: "Territorial and political subdivisions shall enjoy local autonomy. The principle of subsidiarity — local matters are best handled locally." },
+      { heading: "Autonomous Regions (Sec. 15–21)", bullets: ["Two autonomous regions: Muslim Mindanao (BARMM) and the Cordilleras","Created by organic act passed by Congress","Subject to ratification by majority of votes cast in constituent units","CAR (Cordillera Autonomous Region) — has not been established due to failed plebiscites","ARMM (established); later replaced by BARMM under RA 11054 (2018)"] },
+      { heading: "Key Limitations", bullets: ["President exercises general supervision over LGUs (NOT control)","LGUs may be created, merged, abolished by law (with plebiscite requirement for substantial alterations)","Just share in national taxes and natural resources (IRA/NTA)"] }
+    ],
+    flashcards: [
+      { q: "What are the territorial and political subdivisions of the Philippines?", a: "Provinces, cities, municipalities, barangays, and autonomous regions." },
+      { q: "How many autonomous regions does the Constitution provide for?", a: "Two — Muslim Mindanao and the Cordilleras." },
+      { q: "What is the difference between the President's power over LGUs vs. executive departments?", a: "The President exercises SUPERVISION over LGUs but CONTROL over executive departments. Supervision means ensuring laws are followed; control means the power to alter or substitute." },
+      { q: "What law embodies the Local Government Code?", a: "Republic Act 7160, enacted in 1991." }
+    ]
+  },
+  {
+    id: "art11", title: "Article XI", subtitle: "Accountability of Public Officers",
+    color: "#c0392b", icon: "⚖️",
+    sections: [
+      { heading: "Principle of Public Accountability (Sec. 1)", content: "Public office is a public trust. Public officers and employees must at all times be accountable to the people, serve with utmost responsibility, integrity, loyalty, and efficiency, act with patriotism and justice, and lead modest lives." },
+      { heading: "Impeachment (Sec. 2–3)", bullets: ["Impeachable officers: President, Vice President, members of the Supreme Court and constitutional commissions, Ombudsman","Grounds: culpable violation of the Constitution, treason, bribery, graft and corruption, other high crimes, betrayal of public trust","House of Representatives: initiates (files and verifies), has exclusive power to impeach","Senate: sole power to try and decide; conviction requires 2/3 of all its members","One impeachment complaint only per officer within a period of one year","Penalty: removal from office, disqualification from public office","Does not prevent criminal prosecution"] },
+      { heading: "Ombudsman (Sec. 5–14)", bullets: ["'Tanodbayan' / Office of the Ombudsman","Composed of Ombudsman (Tanodbayan), Overall Deputy, and at least one deputy each for Luzon, Visayas, Mindanao, and one for military","Functions: investigate and prosecute public officials for graft/corruption","Ombudsman term: 7 years, no reappointment","Ombudsman is impeachable"] }
+    ],
+    flashcards: [
+      { q: "Who are the impeachable officers under the 1987 Constitution?", a: "The President, Vice President, Members of the Supreme Court, Members of the Constitutional Commissions, and the Ombudsman." },
+      { q: "What are the grounds for impeachment?", a: "Culpable violation of the Constitution, treason, bribery, graft and corruption, other high crimes, and betrayal of public trust." },
+      { q: "What is the role of the House and Senate in impeachment?", a: "The House has the exclusive power to initiate (file and verify) impeachment complaints; the Senate is the sole tribunal to try and decide impeachment cases." },
+      { q: "What vote is needed for the Senate to convict in an impeachment trial?", a: "Two-thirds of all Senate members (i.e., 16 out of 24)." },
+      { q: "What is the principle in Sec. 1, Art. XI?", a: "'Public office is a public trust.' Officers must be accountable, responsible, loyal, efficient, and patriotic." }
+    ]
+  },
+  {
+    id: "art12", title: "Article XII", subtitle: "National Economy and Patrimony",
+    color: "#1a3a6b", icon: "🌾",
+    sections: [
+      { heading: "Goals (Sec. 1)", bullets: ["More equitable distribution of opportunities, income, and wealth","Sustained increase in the amount of goods and services produced by the nation","Expanding productivity as the key to raising quality of life"] },
+      { heading: "Regalian Doctrine (Sec. 2)", content: "All lands of the public domain, waters, minerals, coal, petroleum, and other mineral oils, all forces of potential energy, fisheries, forests or timber, wildlife, flora and fauna, and other natural resources are owned by the State. The exploration, development, and utilization of these may be allowed only by the State directly or through co-production, joint venture, or production-sharing agreements." },
+      { heading: "60-40 Requirement", bullets: ["At least 60% of the capital of corporations engaged in the utilization of natural resources must be owned by Filipino citizens","Public utilities: at least 60% Filipino-owned","Educational institutions: at least 60% Filipino-owned (except those established by religious groups and mission boards)","Advertising industry: 70-30 Filipino ownership"] },
+      { heading: "Alien Restrictions (Sec. 7)", bullets: ["Aliens may not acquire private lands in the Philippines","Exception: hereditary succession; Filipino spouse of alien","Former natural-born citizens may acquire private land (limited area — Batas Pambansa 185)"] },
+      { heading: "Filipino First Policy (Sec. 10)", content: "In the grant of rights, privileges, and concessions covering national economy and patrimony, the State shall give preference to qualified Filipinos." }
+    ],
+    flashcards: [
+      { q: "What is the Regalian Doctrine?", a: "All natural resources are owned by the State. Their exploration, development, and utilization may only be done by the State directly or through co-production, joint venture, or production-sharing agreements." },
+      { q: "What is the nationality requirement for entities engaging in the utilization of natural resources?", a: "At least 60% of the capital must be owned by Filipino citizens." },
+      { q: "Can aliens own private land in the Philippines?", a: "Generally no. The Constitution limits private land ownership to Filipino citizens, except through hereditary succession." },
+      { q: "What is the Filipino First Policy?", a: "In granting rights, privileges, and concessions over national economy and patrimony, preference is given to qualified Filipinos (Sec. 10, Art. XII)." }
+    ]
+  },
+  {
+    id: "art13", title: "Article XIII", subtitle: "Social Justice and Human Rights",
+    color: "#c0392b", icon: "✊",
+    sections: [
+      { heading: "Social Justice (Sec. 1–2)", bullets: ["Congress shall give highest priority to the enactment of measures to reduce social, economic, and political inequalities","Diffusion of wealth and political power for the common good","Agrarian and natural resources reform","Urban land reform and housing"] },
+      { heading: "Labor (Sec. 3)", bullets: ["State shall afford full protection to labor — local and overseas","Full employment and equal employment opportunities","Guarantee rights to self-organization, collective bargaining, peaceful concerted activities (including strike)","Security of tenure","Humane conditions of work","Living wage","Participation in policy and decision-making affecting rights and benefits"] },
+      { heading: "Commission on Human Rights (Sec. 17–19)", bullets: ["Independent office established by the Constitution","Powers: investigate civil and political rights violations, adopt operational guidelines and rules of procedure, grant immunity, request assistance of any department/bureau/office/agency, cite for contempt for violations","Does NOT have prosecutorial powers (it investigates but does not prosecute — SC ruling in Simon, Jr. v. CHR)"] }
+    ],
+    flashcards: [
+      { q: "What does Art. XIII guarantee to workers?", a: "Rights to self-organization, collective bargaining, peaceful concerted activities (including the right to strike), security of tenure, humane conditions of work, a living wage, and participation in policy-making." },
+      { q: "What is the Commission on Human Rights?", a: "An independent constitutional body that investigates violations of civil and political rights, but does NOT have prosecutorial powers." },
+      { q: "Does the CHR have the power to prosecute?", a: "No. The Supreme Court ruled in Simon, Jr. v. CHR that the CHR is purely investigatory and does not have prosecutorial or adjudicatory power." }
+    ]
+  },
+  {
+    id: "art14", title: "Article XIV", subtitle: "Education, Science, Technology, Arts, Culture and Sports",
+    color: "#1a3a6b", icon: "🎓",
+    sections: [
+      { heading: "Education (Sec. 1–5)", bullets: ["State shall protect and promote the right of all citizens to quality education","Highest budgetary priority — Education shall receive the largest share of the national budget","Free public education in elementary and high school","Optional religious instruction in public elementary and high schools","Schools must have Filipino as medium of instruction","Academic freedom for higher learning institutions","Ownership of educational institutions: 60% Filipino-owned (except missionary schools)"] },
+      { heading: "Language (Sec. 6–9)", bullets: ["Filipino as the national language","Filipino and English as official languages","Congress shall take steps toward development and enrichment of Filipino","Regional languages are auxiliary official languages","Spanish and Arabic shall be promoted on a voluntary and optional basis"] },
+      { heading: "Arts, Culture and Sports (Sec. 14–19)", bullets: ["Promote and popularize the nation's historical and cultural heritage","Freedom of artistic and intellectual expression","Promote Filipino talent in sports (inclusive sports policy)","Sports as a patriotic endeavor — state support for athletes"] }
+    ],
+    flashcards: [
+      { q: "What language shall be used as medium of instruction in schools?", a: "Filipino, as provided in Art. XIV, with English as the other official language." },
+      { q: "What are the official languages of the Philippines?", a: "Filipino and English (Sec. 7, Art. XIV)." },
+      { q: "Which department of government receives the highest budgetary priority?", a: "Education — it shall receive the largest share of the national budget (Sec. 5(5), Art. XIV)." },
+      { q: "What does academic freedom mean under the Constitution?", a: "Institutions of higher learning enjoy academic freedom — freedom to determine who may teach, what may be taught, how it shall be taught, and who may be admitted to study." }
+    ]
+  },
+  {
+    id: "art15", title: "Article XV", subtitle: "The Family",
+    color: "#c0392b", icon: "👨‍👩‍👧",
+    sections: [
+      { heading: "The Family as a Social Institution (Sec. 1–4)", bullets: ["The State recognizes the Filipino family as the foundation of the nation","Marriage is an inviolable social institution — the foundation of the family and shall be protected by the State","The natural and primary right and duty of parents to rear their children","Children's right to assistance from the State","Right of families to a family living wage","State shall defend the right of the spouses to found a family"] },
+      { heading: "No Divorce in the 1987 Constitution?", content: "The Constitution does NOT explicitly ban divorce. It recognizes marriage as inviolable, but the Family Code (EO 209) governs — it allows legal separation and annulment. The absence of a divorce law is statutory, not constitutional. Bangsamoro region has provisions for Muslim personal laws including divorce." }
+    ],
+    flashcards: [
+      { q: "What does the Constitution say about marriage?", a: "Marriage is an inviolable social institution and the foundation of the family, which shall be protected by the State (Sec. 2, Art. XV)." },
+      { q: "Does the 1987 Constitution explicitly prohibit divorce?", a: "No. It does not mention divorce. Marriage is protected as inviolable, but divorce is a statutory (legislative) matter governed by law." }
+    ]
+  },
+  {
+    id: "art16", title: "Article XVI", subtitle: "General Provisions",
+    color: "#1a3a6b", icon: "📋",
+    sections: [
+      { heading: "Key General Provisions", bullets: ["Sec. 1 — Flag and seal of the Philippines","Sec. 3 — State immunity from suit — 'The State may not be sued without its consent'","Sec. 4 — The Armed Forces of the Philippines — its mission: protect people and the State","Sec. 5 — AFP professionalism; prohibition on AFP from engaging in partisan political activity","Sec. 11 — Franchise, certificate, or authorization for media operation — Filipino ownership required; anti-monopoly in mass media"] },
+      { heading: "State Immunity", bullets: ["Doctrine: the state cannot be sued without its consent","Express consent: law authorizes suit (e.g., CA 327 — money claims)","Implied consent: State enters into a commercial/proprietary contract","Waiver of immunity must be clear — cannot be implied from general laws"] }
+    ],
+    flashcards: [
+      { q: "What is the doctrine of state immunity?", a: "The State may not be sued without its consent. It can give express or implied consent to be sued." },
+      { q: "When may the State be impliedly subjected to suit?", a: "When it enters into a commercial or proprietary contract (not sovereign/governmental act), it is deemed to have waived its immunity." },
+      { q: "What does the Constitution say about mass media ownership?", a: "Mass media franchises, certificates, and authorizations shall be owned by Filipinos. Foreign participation in governing bodies of entities is limited." }
+    ]
+  },
+  {
+    id: "art17", title: "Article XVII", subtitle: "Amendments or Revisions",
+    color: "#c0392b", icon: "✏️",
+    sections: [
+      { heading: "Amendment vs. Revision", bullets: ["AMENDMENT — isolated or piecemeal change of specific provisions","REVISION — overhaul of the entire Constitution or large portions of it","Distinction matters: initiatives under Sec. 2 can only propose AMENDMENTS, not revisions (Lambino v. COMELEC, 2006)"] },
+      { heading: "Modes of Proposing Amendments/Revisions (Sec. 1–2)", bullets: ["1. CONSTITUENT ASSEMBLY (Con-Ass) — Congress acting as a constituent assembly; vote of 3/4 of all members","2. CONSTITUTIONAL CONVENTION (Con-Con) — called by 2/3 vote of all members of Congress; or submitted to people (majority) if Congress cannot agree","3. PEOPLE'S INITIATIVE — petition of at least 12% of total registered voters, with every legislative district represented by at least 3%; AMENDMENTS ONLY (not revision)"] },
+      { heading: "Ratification (Sec. 4)", content: "Any amendment or revision proposed shall be valid when ratified by a majority of votes cast in a plebiscite, which shall be held not earlier than 60 days nor later than 90 days after approval of proposed amendment/revision by Congress or Constitutional Convention, or after certification by COMELEC of sufficiency of petition (for initiative)." },
+      { heading: "Key Cases", bullets: ["Lambino v. COMELEC (2006) — People's initiative cannot be used for revision; RA 6735 is inadequate for the purpose","Santiago v. COMELEC (1997) — RA 6735 insufficient to implement Sec. 2 on initiative","Gonzales v. COMELEC — Congress can propose amendments as a constituent assembly"] }
+    ],
+    flashcards: [
+      { q: "What is the difference between amendment and revision of the Constitution?", a: "Amendment is an isolated or piecemeal change; revision involves a substantial overhaul of the Constitution. The distinction is important for determining valid modes of proposal." },
+      { q: "What are the three modes of proposing constitutional changes?", a: "Constituent Assembly (Con-Ass), Constitutional Convention (Con-Con), and People's Initiative (for amendments only)." },
+      { q: "What percentage of registered voters is needed to file a People's Initiative?", a: "At least 12% of total registered voters, with at least 3% from every legislative district." },
+      { q: "Can People's Initiative be used to propose a revision of the Constitution?", a: "No. Per Lambino v. COMELEC (2006), People's Initiative can only propose amendments, not revisions." },
+      { q: "When is a proposed amendment ratified?", a: "When approved by a majority of votes cast in a plebiscite held 60–90 days after the proposal is certified." }
+    ]
+  },
+  {
+    id: "art18", title: "Article XVIII", subtitle: "Transitory Provisions",
+    color: "#1a3a6b", icon: "🔄",
+    sections: [
+      { heading: "Purpose", content: "Governs the transition from the 1973 Constitution (under Marcos) and the Freedom Constitution (1986) to the 1987 Constitution. Most provisions have been superseded by time." },
+      { heading: "Key Provisions", bullets: ["Sec. 2 — The incumbent president and vice president shall serve until noon of June 30, 1992 (Aquino government legitimized)","Sec. 3 — All existing laws, decrees, executive orders, proclamations, letters of instruction, and other executive issuances not inconsistent with the Constitution shall remain operative until amended, repealed, or revoked","Sec. 4 — All existing treaties or international agreements shall remain valid","Sec. 25 — Military bases: any treaty allowing foreign troops must be ratified by the Senate; after expiration in 1991, foreign bases treaty must follow Art. XVIII"] }
+    ],
+    flashcards: [
+      { q: "What is the purpose of Article XVIII?", a: "To govern the transition from the previous constitution and government to the 1987 Constitutional order." },
+      { q: "What happened to existing laws not inconsistent with the 1987 Constitution?", a: "They remained operative until amended, repealed, or revoked (Sec. 3, Art. XVIII)." },
+      { q: "What does Sec. 25 say about foreign military bases?", a: "After the expiration of the RP-US Military Bases Agreement, foreign bases, troops, or facilities shall not be allowed except under a treaty duly concurred in by the Senate." },
+      { q: "What led to the closure of Clark and Subic bases?", a: "The Philippine Senate did not ratify the RP-US Treaty of Friendship, Cooperation and Security in 1991, invoking Sec. 25 of Art. XVIII." }
+    ]
+  }
+];
+
+const ALL_FLASHCARDS = ARTICLES.flatMap(a => a.flashcards.map(f => ({ ...f, article: a.title, subtitle: a.subtitle, color: a.color })));
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentArticle = ARTICLES[0];
+let quizCards = [];
+let cardIndex = 0;
+let flipped = false;
+let score = { correct: 0, wrong: 0 };
+let quizDone = false;
+let currentQuizSource = "all";
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('browse-view').style.display = tab === 'browse' ? 'flex' : 'none';
+  document.getElementById('quiz-view').style.display = tab === 'quiz' ? 'block' : 'none';
+  document.getElementById('tab-browse').className = 'nav-btn ' + (tab === 'browse' ? 'active' : 'inactive');
+  document.getElementById('tab-quiz').className = 'nav-btn ' + (tab === 'quiz' ? 'active' : 'inactive');
+}
+
+// ── SIDEBAR ───────────────────────────────────────────────────────────────────
+function buildSidebar(articles) {
+  const list = document.getElementById('sidebar-list');
+  list.innerHTML = articles.map(a => `
+    <button class="sidebar-btn ${a.id === currentArticle.id ? 'active' : ''}" onclick="selectArticle('${a.id}')">
+      <span class="sidebar-icon">${a.icon}</span>
+      <div>
+        <div class="sidebar-label">${esc(a.title)}</div>
+        <div class="sidebar-sub">${esc(a.subtitle)}</div>
+      </div>
+    </button>
+  `).join('');
+}
+
+function filterSidebar(q) {
+  const query = q.toLowerCase().trim();
+  const filtered = query
+    ? ARTICLES.filter(a =>
+        a.title.toLowerCase().includes(query) ||
+        a.subtitle.toLowerCase().includes(query) ||
+        a.sections.some(s =>
+          (s.heading || '').toLowerCase().includes(query) ||
+          (s.content || '').toLowerCase().includes(query) ||
+          (s.bullets || []).some(b => b.toLowerCase().includes(query))
+        )
+      )
+    : ARTICLES;
+  buildSidebar(filtered);
+}
+
+function selectArticle(id) {
+  currentArticle = ARTICLES.find(a => a.id === id);
+  buildSidebar(ARTICLES);
+  renderArticle();
+  document.getElementById('search-input').value = '';
+  filterSidebar('');
+}
+
+// ── ARTICLE CONTENT ───────────────────────────────────────────────────────────
+function renderBullet(b) {
+  if (b.includes(' — ')) {
+    const [key, ...rest] = b.split(' — ');
+    return `<span class="bullet-key">${esc(key)}</span> — ${esc(rest.join(' — '))}`;
+  }
+  return esc(b);
+}
+
+function renderArticle() {
+  const a = currentArticle;
+  const sections = a.sections.map(sec => `
+    <div class="section-card">
+      <div class="section-heading" style="background: linear-gradient(90deg, ${a.color}33, transparent)">
+        <h3>${esc(sec.heading)}</h3>
+      </div>
+      <div class="section-body">
+        ${sec.content ? `<p>${esc(sec.content)}</p>` : ''}
+        ${sec.bullets ? `<ul>${sec.bullets.map(b => `<li>${renderBullet(b)}</li>`).join('')}</ul>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  const preview = a.flashcards.length > 0 ? `
+    <div class="fc-preview">
+      <h3>🧠 Practice Questions (${a.flashcards.length})</h3>
+      ${a.flashcards.slice(0, 2).map(f => `
+        <div class="fc-item">
+          <p class="q">Q: ${esc(f.q)}</p>
+          <p class="a">A: ${esc(f.a)}</p>
+        </div>
+      `).join('')}
+      <button class="see-all-btn" onclick="startQuiz('${a.id}')">See all ${a.flashcards.length} flashcards →</button>
+    </div>
+  ` : '';
+
+  document.getElementById('article-content').innerHTML = `
+    <div class="article-header">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="article-icon-wrap" style="background:linear-gradient(135deg,${a.color},${a.color}aa)">${a.icon}</div>
+        <div>
+          <h2 class="article-title">${esc(a.title)}</h2>
+          <p class="article-subtitle">${esc(a.subtitle)}</p>
+        </div>
+      </div>
+      <button class="quiz-this-btn" onclick="startQuiz('${a.id}')">🃏 Quiz This Article</button>
+    </div>
+    ${sections}
+    ${preview}
+  `;
+}
+
+// ── QUIZ ──────────────────────────────────────────────────────────────────────
+function buildScopeBtns() {
+  const wrap = document.getElementById('scope-btns');
+  wrap.innerHTML = `
+    <button class="scope-btn all-btn ${currentQuizSource === 'all' ? 'active' : ''}" onclick="startQuiz('all')">
+      All Articles (${ALL_FLASHCARDS.length} cards)
+    </button>
+    ${ARTICLES.map(a => `
+      <button class="scope-btn ${currentQuizSource === a.id ? 'active' : ''}" onclick="startQuiz('${a.id}')">
+        ${a.icon} ${esc(a.title)}
+      </button>
+    `).join('')}
+  `;
+}
+
+function startQuiz(source) {
+  currentQuizSource = source;
+  const pool = source === 'all'
+    ? shuffle(ALL_FLASHCARDS)
+    : shuffle((ARTICLES.find(a => a.id === source)?.flashcards || []).map(f => {
+        const art = ARTICLES.find(a => a.id === source);
+        return { ...f, article: art.title, subtitle: art.subtitle, color: art.color };
+      }));
+  quizCards = pool;
+  cardIndex = 0;
+  flipped = false;
+  score = { correct: 0, wrong: 0 };
+  quizDone = false;
+  buildScopeBtns();
+  updateProgress();
+  renderQuizCard();
+  document.getElementById('quiz-done').classList.add('hidden');
+  document.getElementById('quiz-card-area').classList.remove('hidden');
+  switchTab('quiz');
+}
+
+function updateProgress() {
+  const total = quizCards.length;
+  const pct = total > 0 ? (cardIndex / total) * 100 : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('prog-num').textContent = cardIndex + '/' + total;
+  document.getElementById('prog-correct').textContent = '✓ ' + score.correct;
+  document.getElementById('prog-wrong').textContent = '✗ ' + score.wrong;
+}
+
+function renderQuizCard() {
+  const area = document.getElementById('quiz-card-area');
+  if (!quizCards.length) { area.innerHTML = ''; return; }
+  const card = quizCards[cardIndex];
+  area.innerHTML = `
+    <div class="card-source-tag" style="background:${card.color}33;border:1px solid ${card.color}66">
+      <span class="card-source-label">${esc(card.article)} — ${esc(card.subtitle)}</span>
+    </div>
+    <div class="flashcard ${flipped ? 'flipped' : ''}" onclick="flipCard()">
+      <span class="card-hint">${flipped ? 'ANSWER — click to flip' : 'QUESTION — click to reveal'}</span>
+      ${!flipped ? `
+        <div class="card-type-label q-label">❓ Question</div>
+        <p class="card-q-text">${esc(card.q)}</p>
+      ` : `
+        <div class="card-type-label a-label">✅ Answer</div>
+        <p class="card-a-text">${esc(card.a)}</p>
+      `}
+    </div>
+    ${!flipped ? `
+      <div class="reveal-row">
+        <button class="reveal-btn" onclick="flipCard()">Reveal Answer</button>
+      </div>
+    ` : `
+      <div class="answer-btns">
+        <button class="miss-btn" onclick="handleAnswer(false)">✗ Missed It</button>
+        <button class="got-btn" onclick="handleAnswer(true)">✓ Got It!</button>
+      </div>
+    `}
+  `;
+}
+
+function flipCard() {
+  flipped = !flipped;
+  renderQuizCard();
+}
+
+function handleAnswer(correct) {
+  score[correct ? 'correct' : 'wrong']++;
+  if (cardIndex + 1 >= quizCards.length) {
+    showDone();
+  } else {
+    cardIndex++;
+    flipped = false;
+    updateProgress();
+    renderQuizCard();
+  }
+}
+
+function showDone() {
+  quizDone = true;
+  const total = quizCards.length;
+  const pct = Math.round((score.correct / total) * 100);
+  document.getElementById('quiz-card-area').classList.add('hidden');
+  const done = document.getElementById('quiz-done');
+  done.classList.remove('hidden');
+  document.getElementById('trophy-icon').textContent = pct >= 80 ? '🏆' : pct >= 50 ? '📚' : '💪';
+  document.getElementById('done-msg').innerHTML =
+    `You got <strong style="color:var(--green)">${score.correct}</strong> correct and <strong style="color:var(--danger)">${score.wrong}</strong> wrong out of ${total} questions.`;
+  document.getElementById('done-pct').textContent = pct + '%';
+  updateProgress();
+}
+
+function tryAgain() {
+  startQuiz(currentQuizSource);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildSidebar(ARTICLES);
+renderArticle();
+buildScopeBtns();
+startQuiz('all');
+switchTab('browse');
+</script>
+</body>
+</html>
